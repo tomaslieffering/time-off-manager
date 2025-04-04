@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: app_backend
+    restart: unless-stopped
+    volumes:
+      - ./backend:/var/www/html
+      - ./backend/vendor:/var/www/html/vendor
+    expose:
+      - "9000"
+    depends_on:
+      - db
+    networks:
+      - timeoffmanager_network
+    environment:
+      DB_CONNECTION: ${DB_DATABASE:-mysql}
+      DB_HOST: ${DB_HOST:-db}
+      DB_PORT: ${DB_PORT:-3306}
+      DB_DATABASE: ${DB_DATABASE:-timeoffmanager}
+      DB_USERNAME: ${DB_USERNAME:-root}
+      DB_PASSWORD: ${DB_PASSWORD:-}
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: app_frontend
+    restart: unless-stopped
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    expose:
+      - "5137:5137"
+    networks:
+      - timeoffmanager_network
+
+  db:
+    image: mysql:8.0
+    container_name: app_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-timeoffmanager}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-}
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql:/var/lib/mysql
+    networks:
+      - timeoffmanager_network
+
+  nginx:
+    image: nginx:alpine
+    container_name: app_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./backend:/var/www/html
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/ssl:/etc/nginx/ssl
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - timeoffmanager_network
+
+networks:
+  timeoffmanager_network:
+    driver: bridge
+
+volumes:
+  mysql:
