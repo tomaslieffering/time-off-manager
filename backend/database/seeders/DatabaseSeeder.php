@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\LeaveRequest;
 use App\Models\User;
+use Database\Factories\LeaveRequestFactory;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -13,11 +15,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $users = User::factory()
+            ->count(20)
+            ->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        LeaveRequest::factory()
+            ->recycle($users)
+            ->count(50)
+            ->create();
     }
 }
