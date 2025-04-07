@@ -1,48 +1,53 @@
 import { LoginInputs } from '@/types/LoginInputs'
 import { useContext, createContext, ReactNode, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import axiosInstance from '@/lib/api'
+import { User } from '@/types/User'
 
 interface AuthProviderProps {
-	user: string | null,
-	logIn(data: LoginInputs): void,
-	logOut(): void
+	user: User | null,
+	logIn(data: LoginInputs): Promise<boolean | void>,
+	logOut(): Promise<boolean | void>
 }
 
 const AuthContext = createContext<AuthProviderProps>({
 	user: null,
-	logIn: () => { },
-	logOut: () => { }
+	logIn: async () => { },
+	logOut: async () => { }
 })
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
-	const [user, setUser] = useState(localStorage.getItem('user') || null)
-	const navigate = useNavigate()
 
-	const logIn = (data: LoginInputs) => {
-		axiosInstance.get("/sanctum/csrf-cookie").then(() => {
-			axiosInstance
-				.post("/api/login", {
-					email: data.email,
-					password: data.password,
-				})
-				.then((response) => {
-					setUser(response.data.data.user)
-					localStorage.setItem('user', response.data.data.user);
-				})
-				.catch(function (error) {
-					console.error(error)
-				})
-		})
-		navigate('/requests')
+	const [user, setUser] = useState<User | null>(JSON.parse(localStorage.getItem('user') || 'null'))
+
+	const logIn = async (data: LoginInputs) => {
+		await axiosInstance.get('/sanctum/csrf-cookie')
+		const success = await axiosInstance
+			.post('/api/login', {
+				email: data.email,
+				password: data.password,
+			})
+			.then((response) => {
+				setUser(response.data.data.user)
+				localStorage.setItem('user', JSON.stringify(response.data.data.user));
+				return true
+			})
+			.catch(() => {
+				return false
+			})
+
+		return success
 	}
 
-	const logOut = () => {
-		axiosInstance.post('/api/logout').then(() => {
+	const logOut = async () => {
+		const success = await axiosInstance.post('/api/logout').then(() => {
 			setUser(null)
 			localStorage.removeItem('user');
+			return true
+		}).catch(() => {
+			return false
 		})
-		navigate('/')
+
+		return success
 	}
 
 	return (

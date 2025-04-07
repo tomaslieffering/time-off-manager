@@ -28,15 +28,13 @@ trait ApiResponses
         }
 
         return response()->json([
-            'errors' => $errors
+            'errors' => $errors,
         ]);
     }
 
     protected function notAuthorized($message) {
-        return $this->error([
-            'status' => 401,
+        return response()->json([
             'message' => $message,
-            'source' => ''
-        ]);
+        ], 401);
     }
 }

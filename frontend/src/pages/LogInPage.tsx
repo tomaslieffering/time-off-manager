@@ -2,11 +2,17 @@ import { cx } from '@/lib/utils'
 import { useAuth } from '@/providers/AuthProvider'
 import { LoginInputs } from '@/types/LoginInputs'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
+import { LoaderCircle } from 'lucide-react'
 
-export default function LogIn() {
-	const auth = useAuth();
+export default function LogInPage() {
+	const auth = useAuth()
+	const navigate = useNavigate()
+	const [logInFailed, setLoginFailed] = useState(false)
+	const [logInPending, setLogInPending] = useState(false)
 
 	const loginSchema = z.object({
 		email: z.string().min(1, 'Email is required').email('Please enter a valid email.'),
@@ -23,12 +29,24 @@ export default function LogIn() {
 		resolver: zodResolver(loginSchema),
 	})
 
-	const onSubmit: SubmitHandler<LoginInputs> = (data) => auth.logIn(data)
+	const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
+		setLogInPending(true)
+		const success = await auth.logIn(data)
+		console.log(success)
+		if (!success) {
+			setLoginFailed(true)
+			setLogInPending(false)
+		} else {
+			setLoginFailed(false)
+			setLogInPending(false)
+			navigate('/requests')
+		}
+	}
 
 	return (
 		<div className='flex flex-col items-center w-full my-16'>
-			<h1 className="text-strong text-xl/8 font-medium mt-8">Sign in</h1>
-			<p className="text-default  mt-1.5 mb-8 text-gray-500">Sign in to use Time Off Manager</p>
+			<h1 className="text-strong text-xl/8 font-medium mt-8">Log in</h1>
+			<p className="text-default  mt-1.5 mb-8 text-gray-500">Log in to use Time Off Manager</p>
 			<form onSubmit={handleSubmit(onSubmit)} className='flex flex-col items-center w-full max-w-96'>
 				<div className='mb-5 w-full'>
 					<label htmlFor='email' className='block mb-2 text-sm font-medium text-gray-900'>Email</label>
@@ -50,9 +68,28 @@ export default function LogIn() {
 					/>
 					{errors.password && <span className='block mt-2 text-sm font-medium text-red-600'>{errors.password.message}</span>}
 				</div>
+				{
+					logInFailed &&
+					<span className='block mb-4 text-sm font-medium text-red-600'>Log in failed, credentials did not match</span>
+				}
 
-				<button type='submit' className='min-w-48 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center'>
-					Log in
+				<button disabled={logInPending} type='submit'
+					className={cx('flex items-center  justify-center min-w-48 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center',
+						logInPending ? 'bg-blue-400 hover:bg-blue-400' : ''
+					)}>
+					{
+						logInPending ?
+							<span>
+								Logging in...
+							</span> :
+							<span>
+								Log in
+							</span>
+					}
+					{
+						logInPending &&
+						<LoaderCircle className='animate-spin ml-2' />
+					}
 				</button>
 			</form>
 		</div>

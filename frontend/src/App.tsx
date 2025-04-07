@@ -1,9 +1,10 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import AllRequests from '@/pages/AllRequests'
-import LogIn from '@/pages/LogIn'
+import LogInPage from '@/pages/LogInPage'
 import DefaultLayout from '@/layouts/DefaultLayout'
 import AuthProvider from '@/providers/AuthProvider'
+import HomePage from '@/pages/HomePage'
 
 function App() {
   const queryClient = new QueryClient()
@@ -14,8 +15,9 @@ function App() {
         <AuthProvider>
           <Routes>
             <Route element={<DefaultLayout />}>
+              <Route path='/' element={<HomePage />} />
               <Route path='/requests' element={<AllRequests />} />
-              <Route path='/login' element={<LogIn />} />
+              <Route path='/login' element={<LogInPage />} />
             </Route>
           </Routes>
         </AuthProvider>

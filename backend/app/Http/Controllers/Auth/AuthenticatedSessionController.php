@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Traits\ApiResponses;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -23,7 +24,7 @@ class AuthenticatedSessionController extends Controller
             $request->session()->regenerate();
  
             return $this->success('Login successful', [
-                'user' => Auth::user()->name
+                'user' => new UserResource(Auth::user())
             ]);
         }
  
