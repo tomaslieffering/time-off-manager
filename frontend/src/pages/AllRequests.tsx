@@ -1,13 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { LeaveRequest } from '@/types/LeaveRequest';
+import axiosInstance from '@/lib/api';
 
 export default function AllRequests() {
 	const { isPending, error, data } = useQuery({
 		queryKey: ['allRequests'],
 		queryFn: () =>
-			fetch('http://api.timemanager.local/api/requests').then((res) =>
-				res.json(),
-			)
+			axiosInstance.get('/api/requests').then((response) => {
+				return response.data
+			})
 	})
 
 	if (isPending) return 'Loading...'

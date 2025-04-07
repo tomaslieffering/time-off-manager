@@ -1,10 +1,13 @@
 import { cx } from '@/lib/utils'
+import { useAuth } from '@/providers/AuthProvider'
 import { LoginInputs } from '@/types/LoginInputs'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 export default function LogIn() {
+	const auth = useAuth();
+
 	const loginSchema = z.object({
 		email: z.string().min(1, 'Email is required').email('Please enter a valid email.'),
 		password: z.string().min(1, 'Password is required')
@@ -20,11 +23,11 @@ export default function LogIn() {
 		resolver: zodResolver(loginSchema),
 	})
 
-	const onSubmit: SubmitHandler<LoginInputs> = (data) => console.log(data)
+	const onSubmit: SubmitHandler<LoginInputs> = (data) => auth.logIn(data)
 
 	return (
 		<div className='flex flex-col items-center w-full my-16'>
-			<h1 className="text-strong text-xl/8 font-medium mt-16">Sign in</h1>
+			<h1 className="text-strong text-xl/8 font-medium mt-8">Sign in</h1>
 			<p className="text-default  mt-1.5 mb-8 text-gray-500">Sign in to use Time Off Manager</p>
 			<form onSubmit={handleSubmit(onSubmit)} className='flex flex-col items-center w-full max-w-96'>
 				<div className='mb-5 w-full'>

@@ -1,10 +1,15 @@
 import { cx } from '@/lib/utils'
+import { useAuth } from '@/providers/AuthProvider'
 import { Clock } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 
 export default function Header() {
+	const auth = useAuth()
+
+	console.log(auth.user)
+
 	return (
-		<nav className='bg-white border-gray-200'>
+		<nav className='bg-white border-gray-200 drop-shadow-md'>
 			<div className='max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4'>
 				<NavLink to='/' className='flex items-center space-x-3 rtl:space-x-reverse'>
 					<Clock className='text-blue-600' />
@@ -19,16 +24,29 @@ export default function Header() {
 							)}>
 							About
 						</NavLink>
-						<NavLink to='/login'
-							className={({ isActive }) => cx(
-								'block py-2 px-3 text-gray-900 rounded-sm border-0 hover:text-blue-700',
-								isActive ? 'text-blue-500' : ''
-							)}>
-							Login
-						</NavLink>
+						{
+							auth.user ?
+								<>
+									<button onClick={() => auth.logOut()} className='block py-2 px-3 text-gray-900 rounded-sm border-0 hover:text-blue-700'>
+										Logout
+									</button>
+									<div className='block py-2 px-3 text-gray-500 rounded-sm border-0'>
+										{
+											auth.user
+										}
+									</div>
+								</> :
+								<NavLink to='/login'
+									className={({ isActive }) => cx(
+										'block py-2 px-3 text-gray-900 rounded-sm border-0 hover:text-blue-700',
+										isActive ? 'text-blue-500' : ''
+									)}>
+									Login
+								</NavLink>
+						}
 					</div>
 				</div>
 			</div>
-		</nav>
+		</nav >
 	)
 }
