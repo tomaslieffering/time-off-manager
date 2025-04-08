@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\LeaveRequestResource;
 use App\Models\LeaveRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LeaveRequestController extends Controller
 {
@@ -13,13 +14,13 @@ class LeaveRequestController extends Controller
      */
     public function index()
     {
-        // check current user is admin
+        $admin = Auth::user()->is_admin;
 
-        // if admin, return all requests
-        return LeaveRequestResource::collection(LeaveRequest::all());
-
-        // if not, return only current user
-    }
+        if ($admin) {
+            return LeaveRequestResource::collection(LeaveRequest::all());
+        } else {
+            return LeaveRequestResource::collection(Auth::user()->leaveRequests);
+        }    }
 
     /**
      * Store a newly created resource in storage.

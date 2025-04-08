@@ -25,10 +25,21 @@ class DatabaseSeeder extends Seeder
             ->create();
 
         User::create([
-            'name' => 'admin',
+            'name' => 'Admin',
             'email' => 'admin@mail.com',
             'password' => 'password',
             'is_admin' => true
         ]);
+
+        $requests = LeaveRequest::factory()->count(3)->create();
+
+        $user = User::create([
+            'name' => 'John',
+            'email' => 'john@mail.com',
+            'password' => 'password',
+            'is_admin' => false
+        ]);
+
+        $user->leaveRequests()->saveMany($requests);
     }
 }

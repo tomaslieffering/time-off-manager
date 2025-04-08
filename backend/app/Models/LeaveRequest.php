@@ -19,4 +19,12 @@ class LeaveRequest extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    protected function casts(): array
+    {
+        return [
+            'date_start' => 'datetime',
+            'date_end' => 'datetime',
+        ];
+    }
 }

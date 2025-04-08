@@ -1,5 +1,5 @@
 import { cx } from '@/lib/utils'
-import { useAuth } from '@/providers/AuthProvider'
+import { useAuth } from '@/contexts/AuthProvider'
 import { LoginInputs } from '@/types/LoginInputs'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'

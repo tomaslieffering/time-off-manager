@@ -1,4 +1,4 @@
-import { useAuth } from '@/providers/AuthProvider'
+import { useAuth } from '@/contexts/AuthProvider'
 import { NavLink } from 'react-router-dom'
 
 export default function HomePage() {
