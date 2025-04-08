@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const axiosInstance = axios.create({
-	baseURL: 'http://api.timemanager.local',
+	baseURL: import.meta.env.REACT_APP_BACKEND,
 	withCredentials: true,
 	withXSRFToken: true
 })
