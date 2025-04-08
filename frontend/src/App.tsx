@@ -12,6 +12,7 @@ import NotFoundPage from '@/pages/NotFoundPage'
 import AdminRequestsPage from '@/pages/admin/AdminRequestsPage'
 import UserCalendarPage from '@/pages/user/UserCalendarPage'
 import AdminCalendarPage from '@/pages/admin/AdminCalendarPage'
+import AboutPage from '@/pages/AboutPage'
 
 function App() {
   const queryClient = new QueryClient()
@@ -25,17 +26,19 @@ function App() {
 
               <Route element={<PrivateRoutes />}>
                 <Route path='/requests' element={<UserRequestsPage />} />
-                <Route path='/requests/new' element={<AddRequestPage />}></Route>
-                <Route path='/calendar' element={<UserCalendarPage />}></Route>
+                <Route path='/requests/new' element={<AddRequestPage />} />
+                <Route path='/calendar' element={<UserCalendarPage />} />
+
+                <Route path='/admin' element={<AdminRoutes />}>
+                  <Route path='requests' element={<AdminRequestsPage />} />
+                  <Route path='calendar' element={<AdminCalendarPage />} />
+                </Route>
               </Route>
 
-              <Route path='/admin' element={<AdminRoutes />}>
-                <Route path='requests' element={<AdminRequestsPage />} />
-                <Route path='calendar' element={<AdminCalendarPage />} />
-              </Route>
 
               <Route path='/' element={<HomePage />} />
               <Route path='/login' element={<LogInPage />} />
+              <Route path='/about' element={<AboutPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>
