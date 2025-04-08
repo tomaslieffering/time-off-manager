@@ -1,6 +1,5 @@
 import { cx } from '@/lib/utils'
 import { useAuth } from '@/contexts/AuthProvider'
-import { LoginInputs } from '@/types/LoginInputs'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -19,20 +18,19 @@ export default function LogInPage() {
 		password: z.string().min(1, 'Password is required')
 	})
 
-	type LoginFormValues = z.infer<typeof loginSchema>
+	type LogInFormValues = z.infer<typeof loginSchema>
 
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<LoginFormValues>({
+	} = useForm<LogInFormValues>({
 		resolver: zodResolver(loginSchema),
 	})
 
-	const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
+	const onSubmit: SubmitHandler<LogInFormValues> = async (data) => {
 		setLogInPending(true)
 		const success = await auth.logIn(data)
-		console.log(success)
 		if (!success) {
 			setLoginFailed(true)
 			setLogInPending(false)

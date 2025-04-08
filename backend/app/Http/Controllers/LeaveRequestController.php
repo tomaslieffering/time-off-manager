@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreLeaveRequestRequest;
 use App\Http\Resources\LeaveRequestResource;
 use App\Models\LeaveRequest;
 use Illuminate\Http\Request;
@@ -20,14 +21,15 @@ class LeaveRequestController extends Controller
             return LeaveRequestResource::collection(LeaveRequest::all());
         } else {
             return LeaveRequestResource::collection(Auth::user()->leaveRequests);
-        }    }
+        }    
+    }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreLeaveRequestRequest $request)
     {
-        //
+        LeaveRequest::create($request->getModelAttributes());
     }
 
     /**

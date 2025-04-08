@@ -22,11 +22,11 @@ class LeaveRequestResource extends JsonResource
             'date_end' => $this->date_end,
             'submitted_date' => $this->created_at,
             'updated_date' => $this->updated_at,
-            'approver' => [
+            'approver' => $this->approver ? [
                 'id' => $this->approver->id,
                 'name' => $this->approver->name,
                 'email' => $this->approver->email,
-            ],
+            ] : null,
             'requester' => [
                 'id' => $this->requester->id,
                 'name' => $this->requester->name,

@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\LeaveRequestStatuses;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,8 +16,8 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->foreignId('requester_id');
-            $table->foreignId('approver_id');
-            $table->enum('status', ['approved', 'rejected', 'pending', 'cancelled']);
+            $table->foreignId('approver_id')->nullable();
+            $table->enum('status', array_column(LeaveRequestStatuses::cases(), 'value'))->default(LeaveRequestStatuses::Pending->value);
             $table->date('date_start');
             $table->date('date_end');
             $table->string('reason');

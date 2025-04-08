@@ -7,6 +7,7 @@ import AuthProvider from '@/contexts/AuthProvider'
 import HomePage from '@/pages/HomePage'
 import PrivateRoutes from '@/components/routes/PrivateRoutes'
 import AdminRoutes from '@/components/routes/AdminRoutes'
+import AddRequestPage from './pages/AddRequestPage'
 
 function App() {
   const queryClient = new QueryClient()
@@ -19,6 +20,7 @@ function App() {
             <Route element={<DefaultLayout />}>
               <Route element={<PrivateRoutes />}>
                 <Route path='/requests' element={<UserRequestsPage />} />
+                <Route path='/requests/new' element={<AddRequestPage />}></Route>
               </Route>
               <Route element={<AdminRoutes />}>
                 {/* <Route path='/' element={<AllRequestsPage />} /> */}

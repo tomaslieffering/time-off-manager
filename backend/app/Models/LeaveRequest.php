@@ -9,6 +9,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class LeaveRequest extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'status',
+        'date_start',
+        'date_end',
+        'reason',
+        'requester_id',
+        'approver_id'
+    ];
     
     public function requester(): BelongsTo
     {

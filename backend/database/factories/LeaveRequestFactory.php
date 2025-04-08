@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\LeaveRequestStatuses;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -20,7 +21,7 @@ class LeaveRequestFactory extends Factory
         return [
             'approver_id' => User::factory(),
             'requester_id' => User::factory(),
-            'status' => fake()->randomElement(['approved', 'rejected', 'pending', 'cancelled']),
+            'status' => fake()->randomElement(array_column(LeaveRequestStatuses::cases(), 'value')),
             'date_start' => fake()->dateTimeBetween('-1 week', '+1 week'),
             'date_end' => fake()->dateTimeBetween('+1 week', '+3 week'),
             'reason' => fake()->randomElement([
