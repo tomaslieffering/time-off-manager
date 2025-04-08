@@ -5,6 +5,7 @@ import LeaveRequestSkeleton from '@/components/ui/LeaveRequestSkeleton';
 import PageTitle from '@/components/ui/PageTitle';
 import ErrorBanner from '@/components/ui/ErrorBanner';
 import AdminLeaveRequestCard from '@/components/ui/AdminLeaveRequestCard';
+import NoRequestsToShow from '@/components/ui/NoRequestsToShow';
 
 export default function AdminRequestsPage() {
 	const { isPending, error, data } = useQuery({
@@ -44,11 +45,13 @@ export default function AdminRequestsPage() {
 			<PageTitle title='Pending leave requests' />
 			<div className='flex flex-col gap-4 my-8'>
 				{
-					data.data.map((leaveRequest: LeaveRequest) => {
-						return (
-							<AdminLeaveRequestCard leaveRequest={leaveRequest} />
-						)
-					})
+					data.data.length ?
+						data.data.map((leaveRequest: LeaveRequest) => {
+							return (
+								<AdminLeaveRequestCard leaveRequest={leaveRequest} />
+							)
+						}) :
+						<NoRequestsToShow />
 				}
 			</div>
 		</>

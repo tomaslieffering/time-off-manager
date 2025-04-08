@@ -1,15 +1,16 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import UserRequestsPage from '@/pages/UserRequestsPage'
-import LogInPage from '@/pages/LogInPage'
+import UserRequestsPage from '@/pages/user/UserRequestsPage'
+import LogInPage from '@/pages/auth/LogInPage'
 import DefaultLayout from '@/layouts/DefaultLayout'
 import AuthProvider from '@/contexts/AuthProvider'
 import HomePage from '@/pages/HomePage'
 import PrivateRoutes from '@/components/routes/PrivateRoutes'
 import AdminRoutes from '@/components/routes/AdminRoutes'
-import AddRequestPage from '@/pages/AddRequestPage'
+import AddRequestPage from '@/pages/user/AddRequestPage'
 import NotFoundPage from '@/pages/NotFoundPage'
-import AdminRequestsPage from '@/pages/AdminRequestsPage'
+import AdminRequestsPage from '@/pages/admin/AdminRequestsPage'
+import UserCalendarPage from '@/pages/user/UserCalendarPage'
 
 function App() {
   const queryClient = new QueryClient()
@@ -17,13 +18,14 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <AuthProvider >
+        <AuthProvider>
           <Routes>
             <Route element={<DefaultLayout />}>
 
               <Route path='/requests' element={<PrivateRoutes />}>
                 <Route index element={<UserRequestsPage />} />
                 <Route path='new' element={<AddRequestPage />}></Route>
+                <Route path='calendar' element={<UserCalendarPage />}></Route>
               </Route>
 
               <Route path='/admin' element={<AdminRoutes />}>

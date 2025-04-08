@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         // Create some previous leave request
         LeaveRequest::factory()
         ->recycle($users)
-        ->count(20)
+        ->count(10)
             ->create([
                 'date_end' => fake()->dateTimeBetween('-4 week', '-1 week'),
                 'date_start' => fake()->dateTimeBetween('-8 week', '-6 week'),
@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
         // Create some future leave request
         LeaveRequest::factory()
             ->recycle($users)
-            ->count(20)
+            ->count(10)
             ->create([
                 'date_end' => fake()->dateTimeBetween('+3 week', '+4 week'),
                 'date_start' => fake()->dateTimeBetween('+1 week', '+2week'),

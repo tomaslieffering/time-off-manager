@@ -7,6 +7,7 @@ import ErrorBanner from '@/components/ui/ErrorBanner';
 import LeaveRequestCard from '@/components/ui/LeaveRequestCard';
 import { NavLink } from 'react-router-dom';
 import { PlusCircle } from 'lucide-react';
+import NoRequestsToShow from '@/components/ui/NoRequestsToShow';
 
 export default function UserRequestsPage() {
 	const { isPending, error, data } = useQuery({
@@ -62,21 +63,25 @@ export default function UserRequestsPage() {
 			</div>
 			<div className='flex flex-col gap-4 my-8'>
 				{
-					data.upcoming.map((leaveRequest: LeaveRequest) => {
-						return (
-							<LeaveRequestCard leaveRequest={leaveRequest} />
-						)
-					})
+					data.upcoming.length ?
+						data.upcoming.map((leaveRequest: LeaveRequest) => {
+							return (
+								<LeaveRequestCard leaveRequest={leaveRequest} />
+							)
+						}) :
+						<NoRequestsToShow />
 				}
 			</div>
 			<PageTitle title='Previous leave requests' />
 			<div className='flex flex-col gap-4 my-8'>
 				{
-					data.previous.map((leaveRequest: LeaveRequest) => {
-						return (
-							<LeaveRequestCard leaveRequest={leaveRequest} />
-						)
-					})
+					data.previous.length ?
+						data.previous.map((leaveRequest: LeaveRequest) => {
+							return (
+								<LeaveRequestCard leaveRequest={leaveRequest} />
+							)
+						}) :
+						<NoRequestsToShow />
 				}
 			</div>
 		</>
