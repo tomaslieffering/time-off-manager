@@ -66,14 +66,14 @@ export default function UserCalendarPage() {
 
 	return (
 		<>
-			<div className='flex mt-8'>
+			<div className='flex flex-col sm:flex-row mt-8 mb-8 lg:mb-0'>
 				<PageTitle title='Upcoming Team Leave' className='m-0 grow' />
 				<button onClick={() => changeMonth(false)} disabled={isFetching}
 					className={cx('flex items-center justify-center cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-4 py-1 text-center',
 						isFetching ? 'bg-blue-400 hover:bg-blue-400' : ''
 					)}>
 					<ArrowLeft className='mr-2' />
-					Previous month
+					Previous
 				</button>
 				<div className='flex items-center justify-center mx-4 min-w-28'>
 					{
@@ -84,7 +84,7 @@ export default function UserCalendarPage() {
 					className={cx('flex items-center justify-center cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-4 py-1 text-center',
 						isFetching ? 'bg-blue-400 hover:bg-blue-400' : ''
 					)}>
-					Next month
+					Next
 					<ArrowRight className='ml-2' />
 				</button>
 			</div>

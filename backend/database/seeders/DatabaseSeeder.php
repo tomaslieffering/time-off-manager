@@ -51,8 +51,8 @@ class DatabaseSeeder extends Seeder
 
         // Create our demo 'user' user
         $user = User::create([
-            'name' => 'John',
-            'email' => 'john@mail.com',
+            'name' => 'Joe Blogs',
+            'email' => 'joeblogs@mail.com',
             'password' => 'password',
             'is_admin' => false
         ]);

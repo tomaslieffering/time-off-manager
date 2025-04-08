@@ -11,6 +11,7 @@ import AddRequestPage from '@/pages/user/AddRequestPage'
 import NotFoundPage from '@/pages/NotFoundPage'
 import AdminRequestsPage from '@/pages/admin/AdminRequestsPage'
 import UserCalendarPage from '@/pages/user/UserCalendarPage'
+import AdminCalendarPage from '@/pages/admin/AdminCalendarPage'
 
 function App() {
   const queryClient = new QueryClient()
@@ -22,14 +23,15 @@ function App() {
           <Routes>
             <Route element={<DefaultLayout />}>
 
-              <Route path='/requests' element={<PrivateRoutes />}>
-                <Route index element={<UserRequestsPage />} />
-                <Route path='new' element={<AddRequestPage />}></Route>
-                <Route path='calendar' element={<UserCalendarPage />}></Route>
+              <Route element={<PrivateRoutes />}>
+                <Route path='/requests' element={<UserRequestsPage />} />
+                <Route path='/requests/new' element={<AddRequestPage />}></Route>
+                <Route path='/calendar' element={<UserCalendarPage />}></Route>
               </Route>
 
               <Route path='/admin' element={<AdminRoutes />}>
-                <Route index element={<AdminRequestsPage />} />
+                <Route path='requests' element={<AdminRequestsPage />} />
+                <Route path='calendar' element={<AdminCalendarPage />} />
               </Route>
 
               <Route path='/' element={<HomePage />} />
