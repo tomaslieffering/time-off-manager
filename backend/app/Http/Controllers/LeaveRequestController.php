@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreLeaveRequestRequest;
 use App\Http\Resources\LeaveRequestResource;
 use App\Models\LeaveRequest;
+use App\Models\User;
 use App\Traits\ApiResponses;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,13 +20,22 @@ class LeaveRequestController extends Controller
      */
     public function index()
     {
-        $admin = Auth::user()->is_admin;
+        $user = User::with('leaveRequests')->find(Auth::id());
 
-        if ($admin) {
-            return LeaveRequestResource::collection(LeaveRequest::all()->sortBy('date_start'));
-        } else {
-            return LeaveRequestResource::collection(Auth::user()->leaveRequests->sortBy('date_start'));
-        }    
+        return [
+            'upcoming' => LeaveRequestResource::collection(
+                $user->leaveRequests()
+                    ->whereDate('date_end', '>=', Carbon::today()->toDateString())
+                    ->get()
+                    ->sortBy('date_start')
+                ),
+            'previous' => LeaveRequestResource::collection(
+                $user->leaveRequests()
+                ->whereDate('date_end', '<', Carbon::today()->toDateString())
+                ->get()
+                ->sortBy('date_start')
+                )
+        ];
     }
 
     /**
@@ -38,22 +49,6 @@ class LeaveRequestController extends Controller
     }
 
     /**
-     * Approve the specified resource in storage.
-     */
-    public function approve(Request $request, LeaveRequest $leaveRequest)
-    {
-        //
-    }
-
-    /**
-     * Reject the specified resource in storage.
-     */
-    public function reject(Request $request, LeaveRequest $leaveRequest)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      */
     public function destroy($leaveRequestId)
@@ -64,8 +59,11 @@ class LeaveRequestController extends Controller
             return $this->notFound('Could not find specified resource');
         }
 
-        $leaveRequest->delete();
-
-        return $this->ok('Deleted leave request');
+        if ($leaveRequest->status === 'pending') {
+            $leaveRequest->delete();
+            return $this->ok('Deleted leave request');
+        } else {
+            return $this->error('Request status must be pending to delete');
+        }
     }
 }

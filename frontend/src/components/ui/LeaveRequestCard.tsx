@@ -1,26 +1,12 @@
 import { format, formatDistanceStrict } from 'date-fns'
 import { type LeaveRequest } from '@/types/LeaveRequest';
-import StatusPill from '@/components/ui/StatusPill';
-import { Ban, CheckCircle2, CircleHelp, Clock, ListCheck, LoaderCircle, XCircle } from 'lucide-react';
+import { Ban, LoaderCircle } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axiosInstance from '@/lib/api';
 import { cx } from '@/lib/utils';
+import { getStatusPill } from '@/components/ui/StatusPill';
 
 export default function LeaveRequestCard({ leaveRequest }: { leaveRequest: LeaveRequest }) {
-	const getStatusPill = (status: string) => {
-		switch (status) {
-			case 'approved':
-				return <StatusPill icon={<CheckCircle2 />} className='bg-green-500' status={status} />
-			case 'rejected':
-				return <StatusPill icon={<XCircle />} className='bg-red-500' status={status} />
-			case 'pending':
-				return <StatusPill icon={<Clock />} className='bg-orange-500' status={status} />
-			case 'completed':
-				return <StatusPill icon={<ListCheck />} className='bg-blue-500' status={status} />
-			default:
-				return <StatusPill icon={<CircleHelp />} className='bg-grey-500' status={status} />
-		}
-	}
 
 	const queryClient = useQueryClient();
 

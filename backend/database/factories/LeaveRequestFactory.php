@@ -22,8 +22,8 @@ class LeaveRequestFactory extends Factory
             'approver_id' => User::factory(),
             'requester_id' => User::factory(),
             'status' => fake()->randomElement(array_column(LeaveRequestStatuses::cases(), 'value')),
-            'date_start' => fake()->dateTimeBetween('-1 week', '+1 week'),
-            'date_end' => fake()->dateTimeBetween('+1 week', '+3 week'),
+            'date_end' => fake()->dateTimeBetween('+3 week', '+4 week'),
+            'date_start' => fake()->dateTimeBetween('-8 week', '+2week'),
             'reason' => fake()->randomElement([
                 'Holiday', 
                 'Bereavement', 

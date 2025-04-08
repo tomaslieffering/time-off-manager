@@ -21,10 +21,20 @@ export default function UserRequestsPage() {
 
 	if (isPending) return (
 		<>
-			<PageTitle title='Upcoming Leave Requests' />
+			<PageTitle title='Upcoming leave requests' />
 			<div className='flex flex-col gap-4 my-8'>
 				{
-					Array.from(Array(3).keys()).map(() => {
+					Array.from(Array(4).keys()).map(() => {
+						return (
+							<LeaveRequestSkeleton />
+						)
+					})
+				}
+			</div>
+			<PageTitle title='Previous requests' />
+			<div className='flex flex-col gap-4 my-8'>
+				{
+					Array.from(Array(4).keys()).map(() => {
 						return (
 							<LeaveRequestSkeleton />
 						)
@@ -44,7 +54,7 @@ export default function UserRequestsPage() {
 	return (
 		<>
 			<div className='flex items-center mt-8'>
-				<PageTitle title='Upcoming Leave Requests' className='m-0 grow' />
+				<PageTitle title='Upcoming leave requests' className='m-0 grow' />
 				<NavLink to='/requests/new' className='flex items-center justify-center cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full w-full sm:w-auto px-5 py-2.5 text-center'>
 					Submit new leave request
 					<PlusCircle className='ml-2' />
@@ -52,7 +62,17 @@ export default function UserRequestsPage() {
 			</div>
 			<div className='flex flex-col gap-4 my-8'>
 				{
-					data.data.map((leaveRequest: LeaveRequest) => {
+					data.upcoming.map((leaveRequest: LeaveRequest) => {
+						return (
+							<LeaveRequestCard leaveRequest={leaveRequest} />
+						)
+					})
+				}
+			</div>
+			<PageTitle title='Previous leave requests' />
+			<div className='flex flex-col gap-4 my-8'>
+				{
+					data.previous.map((leaveRequest: LeaveRequest) => {
 						return (
 							<LeaveRequestCard leaveRequest={leaveRequest} />
 						)

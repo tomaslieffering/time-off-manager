@@ -19,6 +19,12 @@ trait ApiResponses
         ], $statusCode);
     }
 
+    protected function error($message) {
+        return response()->json([
+            'message' => $message,
+        ], 400);
+    }
+
     protected function notFound($message) {
         return response()->json([
             'message' => $message,

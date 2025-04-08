@@ -37,7 +37,7 @@ export default function LogInPage() {
 		} else {
 			setLoginFailed(false)
 			setLogInPending(false)
-			navigate('/requests')
+			navigate('/')
 		}
 	}
 
