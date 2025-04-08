@@ -19,17 +19,10 @@ trait ApiResponses
         ], $statusCode);
     }
 
-    protected function error($errors = [], $statusCode = null) {
-        if (is_string($errors)) {
-            return response()->json([
-                'message' => $errors,
-                'status' => $statusCode
-            ], $statusCode);
-        }
-
+    protected function notFound($message) {
         return response()->json([
-            'errors' => $errors,
-        ]);
+            'message' => $message,
+        ], 404);
     }
 
     protected function notAuthorized($message) {

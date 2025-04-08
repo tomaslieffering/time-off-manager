@@ -10,7 +10,7 @@ import { PlusCircle } from 'lucide-react';
 
 export default function UserRequestsPage() {
 	const { isPending, error, data } = useQuery({
-		queryKey: ['allRequests'],
+		queryKey: ['userRequests'],
 		queryFn: () =>
 			axiosInstance.get('/api/requests').then((response) => {
 				return response.data

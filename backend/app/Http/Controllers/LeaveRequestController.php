@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreLeaveRequestRequest;
 use App\Http\Resources\LeaveRequestResource;
 use App\Models\LeaveRequest;
+use App\Traits\ApiResponses;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LeaveRequestController extends Controller
 {
+    use ApiResponses;
     /**
      * Display a listing of the resource.
      */
@@ -18,9 +21,9 @@ class LeaveRequestController extends Controller
         $admin = Auth::user()->is_admin;
 
         if ($admin) {
-            return LeaveRequestResource::collection(LeaveRequest::all());
+            return LeaveRequestResource::collection(LeaveRequest::all()->sortBy('date_start'));
         } else {
-            return LeaveRequestResource::collection(Auth::user()->leaveRequests);
+            return LeaveRequestResource::collection(Auth::user()->leaveRequests->sortBy('date_start'));
         }    
     }
 
@@ -30,6 +33,8 @@ class LeaveRequestController extends Controller
     public function store(StoreLeaveRequestRequest $request)
     {
         LeaveRequest::create($request->getModelAttributes());
+
+        return $this->ok('Stored new leave request');
     }
 
     /**
@@ -51,8 +56,16 @@ class LeaveRequestController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(LeaveRequest $leaveRequest)
+    public function destroy($leaveRequestId)
     {
-        //
+        try {
+            $leaveRequest = LeaveRequest::findOrFail($leaveRequestId);
+        } catch (ModelNotFoundException $e) {
+            return $this->notFound('Could not find specified resource');
+        }
+
+        $leaveRequest->delete();
+
+        return $this->ok('Deleted leave request');
     }
 }
