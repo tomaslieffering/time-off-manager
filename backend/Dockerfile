@@ -24,6 +24,10 @@ RUN useradd -u 1000 -ms /bin/bash -g laravel laravel
 
 COPY . /var/www/html
 
+RUN composer install
+
+RUN php artisan key:generate
+
 USER laravel
 
 EXPOSE 9000
