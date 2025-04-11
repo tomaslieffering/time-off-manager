@@ -1,6 +1,6 @@
 import { cx } from '@/lib/utils'
 import { useAuth } from '@/contexts/AuthProvider'
-import { Clock, LoaderCircle } from 'lucide-react'
+import { Clock, LoaderCircle, Menu, X } from 'lucide-react'
 import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 
@@ -9,6 +9,7 @@ export default function Header() {
 	const navigate = useNavigate()
 
 	const [logOutPending, setLogOutPending] = useState(false)
+	const [headerOpen, setHeaderOpen] = useState(false)
 
 	const handleLogOut = async () => {
 		setLogOutPending(true)
@@ -24,13 +25,30 @@ export default function Header() {
 
 	return (
 		<nav className='bg-white border-gray-200 drop-shadow-md'>
-			<div className='max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4'>
-				<NavLink to='/' className='flex items-center space-x-3 rtl:space-x-reverse'>
-					<Clock className='text-blue-600' />
-					<span className='self-center text-2xl font-semibold whitespace-nowrap'>Time Off Manager</span>
-				</NavLink>
-				<div className='block w-auto'>
-					<div className='font-medium flex border-gray-100 rounded-lg  flex-row space-x-8 rtl:space-x-reverse mt-0 border-0 bg-white'>
+			<div className='max-w-screen-xl flex flex-col md:flex-row w-full items-center justify-between mx-auto p-4'>
+				<div className='flex w-full grow'>
+					<NavLink to='/' className='flex items-center space-x-3 rtl:space-x-reverse grow'>
+						<Clock className='text-blue-600' />
+						<span className='self-center text-2xl font-semibold whitespace-nowrap'>Time Off Manager</span>
+					</NavLink>
+					<div className='md:hidden'>
+						{
+							!headerOpen ?
+								<button onClick={() => setHeaderOpen(true)}>
+									<Menu />
+								</button>
+								:
+								<button onClick={() => setHeaderOpen(false)}>
+									<X />
+								</button>
+						}
+					</div>
+				</div>
+				<div className={cx(
+					'w-full md:w-auto flex flex-col md:shrink-0',
+					!headerOpen ? 'hidden md:block' : 'block'
+				)}>
+					<div className='font-medium border-gray-100 rounded-lg  flex flex-col md:flex-row space-x-8 mt-0 border-0 bg-white'>
 						<NavLink to='/about'
 							className={({ isActive }) => cx(
 								'block py-2 px-3 text-gray-900 rounded-sm border-0 hover:text-blue-700',

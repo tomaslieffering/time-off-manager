@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewLeaveRequest;
 use App\Http\Requests\StoreLeaveRequestRequest;
 use App\Http\Resources\LeaveRequestResource;
 use App\Models\LeaveRequest;
@@ -43,7 +44,8 @@ class LeaveRequestController extends Controller
      */
     public function store(StoreLeaveRequestRequest $request)
     {
-        LeaveRequest::create($request->getModelAttributes());
+        $leaveRequest = LeaveRequest::create($request->getModelAttributes());
+        NewLeaveRequest::dispatch($leaveRequest);
 
         return $this->ok('Stored new leave request');
     }
