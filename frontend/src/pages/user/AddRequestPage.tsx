@@ -2,14 +2,23 @@ import axiosInstance from '@/lib/api'
 import { cx } from '@/lib/utils'
 import { AddRequestForm } from '@/types/AddRequestForm'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ChevronDown, LoaderCircle } from 'lucide-react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 
 export default function AddRequestPage() {
+	const { isPending, data } = useQuery({
+		queryKey: ['userInfo'],
+		queryFn: () =>
+			axiosInstance.get('/api/user').then((response) => {
+				return response.data
+			})
+	})
+
 	const navigate = useNavigate()
+	const queryClient = useQueryClient();
 
 	const addRequestSchema = z.object({
 		reason: z.string().min(1, 'Leave reason is required'),
@@ -50,6 +59,7 @@ export default function AddRequestPage() {
 			return axiosInstance.post('/api/requests', data)
 		},
 		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ['userInfo'] })
 			navigate('/requests')
 		},
 	})
@@ -69,8 +79,24 @@ export default function AddRequestPage() {
 
 	return (
 		<div className='flex flex-col w-full my-16'>
-			<h1 className="text-strong text-xl/8 font-medium mt-8">Submit a new leave request</h1>
-			<p className="text-default  mt-1.5 mb-8 text-gray-500">Please enter the start date, end date and reason for your leave</p>
+			<div className='flex mt-8'>
+				<div className='grow'>
+					<h1 className="text-strong text-xl/8 font-medium">Submit a new leave request</h1>
+					<p className="text-default  mt-1.5 mb-8 text-gray-500">Please enter the start date, end date and reason for your leave</p>
+				</div>
+				<div className='shrink-0 flex flex-col items-center text-gray-500 font-semibold'>
+					Days of leave left:
+					{
+						isPending ?
+							<div>
+								...
+							</div> :
+							<div className='text-3xl font-semibold text-black'>
+								{data.data.days}
+							</div>
+					}
+				</div>
+			</div>
 			<form onSubmit={handleSubmit(onSubmit)} className='flex flex-col items-center w-full'>
 
 				<div className='grid grid-cols-2 w-full gap-4'>

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Events\DeletedLeaveRequest;
+use App\Events\NewLeaveRequest;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,6 +19,11 @@ class LeaveRequest extends Model
         'reason',
         'requester_id',
         'approver_id'
+    ];
+
+    protected $dispatchesEvents = [
+        'created' => NewLeaveRequest::class,
+        'deleted' => DeletedLeaveRequest::class
     ];
     
     public function requester(): BelongsTo

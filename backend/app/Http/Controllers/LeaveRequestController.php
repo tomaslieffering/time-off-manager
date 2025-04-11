@@ -45,7 +45,6 @@ class LeaveRequestController extends Controller
     public function store(StoreLeaveRequestRequest $request)
     {
         $leaveRequest = LeaveRequest::create($request->getModelAttributes());
-        NewLeaveRequest::dispatch($leaveRequest);
 
         return $this->ok('Stored new leave request');
     }

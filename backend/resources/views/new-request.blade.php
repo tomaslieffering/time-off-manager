@@ -2,11 +2,11 @@
 # New Leave request submitted by {{ $leaveRequest->requester->name }}
 
 <x-mail::panel>
-Reason: {{ $leaveRequest->reason }}
+Reason: **{{ $leaveRequest->reason }}**
 
-Leave start: {{ $leaveStart }}
+Leave start: **{{ $leaveStart }}**
 
-Leave end: {{ $leaveEnd }}
+Leave end: **{{ $leaveEnd }}**
 </x-mail::panel>
 
 <x-mail::button :url="'http://timeoffmanager.local/admin/requests'">
