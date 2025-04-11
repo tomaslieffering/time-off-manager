@@ -15,6 +15,7 @@
 - Access the site at `http://timeoffmanager.local`
 - Use email `joeblogs@mail.com` and password `password` to view the application from a regular users view
 - Use email `admin@mail.com` and password `password` to view the application from an admin users view
+- See outgoing notifications from the application at `mail.timeoffmanager.local`
 
 #### Assumptions
 
