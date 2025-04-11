@@ -6,7 +6,7 @@ export default function CalendarDay({ date, onLeave, inPast }: { date: Date, onL
 	return (
 		<div
 			className={cx(
-				'h-48 p-1.5 shadow-xl bg-white rounded hover:translate-y-2 overflow-hidden',
+				'h-48 p-1.5 shadow-xl bg-white rounded overflow-hidden',
 				inPast ? 'text-gray-500 bg-gray-100 opacity-60' : ''
 			)}>
 			<div className='border-b pt-1 font-semibold border-gray-300 mb-2'>

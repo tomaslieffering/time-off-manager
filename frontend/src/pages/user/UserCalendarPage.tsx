@@ -14,6 +14,7 @@ import DaysOfTheWeek from '@/components/ui/DaysOfTheWeek';
 export default function UserCalendarPage() {
 
 	const [month, setMonth] = useState(new Date())
+	const calendarStart = new Date(month.getFullYear(), month.getMonth(), 1).getDay()
 
 	const getAllDaysInMonth = (date: Date) =>
 		Array.from(
@@ -93,8 +94,11 @@ export default function UserCalendarPage() {
 				isFetching ?
 					<CalendarSkeleton /> :
 					<div className='grid lg:grid-cols-7 gap-2 lg:gap-1 grid-cols-3'>
-						<div className='hidden lg:block' style={{ gridColumn: month.getDay() }}>
-						</div>
+						{
+							calendarStart !== 0 &&
+							<div className='hidden lg:block' style={{ gridColumn: `span ${calendarStart} / span ${calendarStart}` }}>
+							</div>
+						}
 						{
 							data.map((day) => {
 								return (
