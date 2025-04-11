@@ -11,7 +11,7 @@
 - `cd ../`
 - `docker compose up -d --build`
 - `docker exec -it app_backend sh -c "composer install && php artisan key:generate && php artisan migrate:fresh --seed"`
-- Add `timeoffmanager.local` and `api.timeoffmanager.local` to your `hosts` file
+- Add `timeoffmanager.local`, `api.timeoffmanager.local` and `mail.timeoffmanager.local` to your `hosts` file
 - Access the site at `http://timeoffmanager.local`
 - Use email `joeblogs@mail.com` and password `password` to view the application from a regular users view
 - Use email `admin@mail.com` and password `password` to view the application from an admin users view
