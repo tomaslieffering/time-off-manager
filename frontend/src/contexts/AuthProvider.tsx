@@ -6,12 +6,14 @@ import { useQueryClient } from '@tanstack/react-query'
 
 interface AuthProviderProps {
 	user: User | null,
+	token: string,
 	logIn(data: LogInForm): Promise<boolean | void>,
 	logOut(): Promise<boolean | void>
 }
 
 const AuthContext = createContext<AuthProviderProps>({
 	user: null,
+	token: '',
 	logIn: async () => { },
 	logOut: async () => { }
 })
@@ -19,10 +21,10 @@ const AuthContext = createContext<AuthProviderProps>({
 const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 	const [user, setUser] = useState<User | null>(JSON.parse(localStorage.getItem('user') || 'null'))
+	const [token, setToken] = useState(localStorage.getItem('token') || '')
 	const queryClient = useQueryClient()
 
 	const logIn = async (data: LogInForm) => {
-		await axiosInstance.get('/sanctum/csrf-cookie')
 		const success = await axiosInstance
 			.post('/api/login', {
 				email: data.email,
@@ -31,6 +33,9 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 			.then((response) => {
 				setUser(response.data.data.user)
 				localStorage.setItem('user', JSON.stringify(response.data.data.user));
+				setToken(response.data.data.token)
+				localStorage.setItem('token', response.data.data.token);
+
 				return true
 			})
 			.catch(() => {
@@ -43,7 +48,9 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const logOut = async () => {
 		const success = await axiosInstance.post('/api/logout').then(() => {
 			setUser(null)
+			setToken('')
 			localStorage.removeItem('user');
+			localStorage.removeItem('token');
 			queryClient.removeQueries()
 			return true
 		}).catch(() => {
@@ -54,7 +61,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 	}
 
 	return (
-		<AuthContext.Provider value={{ user, logIn, logOut }}>
+		<AuthContext.Provider value={{ user, token, logIn, logOut }}>
 			{children}
 		</AuthContext.Provider>
 	)

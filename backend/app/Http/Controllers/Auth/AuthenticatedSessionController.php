@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use App\Models\User;
 use App\Traits\ApiResponses;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,10 +23,11 @@ class AuthenticatedSessionController extends Controller
         ]);
  
         if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+            $token = $request->user()->createToken(Auth::user()->name);
  
             return $this->success('Login successful', [
-                'user' => new UserResource(Auth::user())
+                'user' => new UserResource(Auth::user()),
+                'token' => $token->plainTextToken
             ]);
         }
  
@@ -33,11 +36,13 @@ class AuthenticatedSessionController extends Controller
 
     public function destroy(Request $request)
     {
-        Auth::guard('web')->logout();
+        try {
+            $user = User::findOrFail(Auth::id());
+        } catch (ModelNotFoundException $e) {
+            return $this->notFound('Specified user could not be logged out');
+        }
 
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
+        $user->tokens()->delete();
 
         return response()->noContent();
     }

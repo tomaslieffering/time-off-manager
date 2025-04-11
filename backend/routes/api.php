@@ -7,12 +7,11 @@ use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\LeaveRequestController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['web'])->group(function() {
-    Route::post('/login', [AuthenticatedSessionController::class, 'store']);
-    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
-});
+Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 
 Route::middleware(['auth:sanctum'])->group(function() {
+    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy']);
+    
     Route::get('/requests', [LeaveRequestController::class, 'index']);
     Route::post('/requests', [LeaveRequestController::class, 'store']);
     Route::delete('/requests/{id}', [LeaveRequestController::class, 'destroy']);
