@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Enums\LeaveRequestStatuses;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,18 +19,32 @@ class LeaveRequestFactory extends Factory
      */
     public function definition(): array
     {
-        return [
+        return array_merge([
             'approver_id' => User::factory(),
             'requester_id' => User::factory(),
-            'status' => fake()->randomElement(array_column(LeaveRequestStatuses::cases(), 'value')),
-            'date_end' => fake()->dateTimeBetween('+3 week', '+4 week'),
-            'date_start' => fake()->dateTimeBetween('-8 week', '+2week'),
             'reason' => fake()->randomElement([
                 'Holiday', 
                 'Bereavement', 
                 'Child care', 
                 'Sick',
             ]),
+        ], $this->getRealisticLeave());
+    }
+
+    private function getRealisticLeave()
+    {
+        $dateStart = fake()->dateTimeBetween('-4 week', '+8 week');
+        $dateEnd = fake()->dateTimeInInterval($dateStart, '+2 week');
+        $status = fake()->randomElement(array_column(LeaveRequestStatuses::cases(), 'value'));
+
+        if (Carbon::parse($dateEnd)->isPast()) {
+            $status = LeaveRequestStatuses::Completed->value;
+        }
+
+        return [
+            'status' => $status,
+            'date_start' => $dateStart,
+            'date_end' => fake()->dateTimeInInterval($dateStart, '+2 week'),
         ];
     }
 }
